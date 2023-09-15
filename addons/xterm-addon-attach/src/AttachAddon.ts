@@ -5,7 +5,7 @@
  * Implements the attach method, that attaches the terminal to a WebSocket stream.
  */
 
-import { Terminal, IDisposable, ITerminalAddon } from '@daiyam/xterm-tab';
+import { Terminal, IDisposable, ITerminalAddon } from 'xterm';
 
 interface IAttachOptions {
   bidirectional?: boolean;

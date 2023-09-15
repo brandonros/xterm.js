@@ -7,7 +7,7 @@ import { IRenderDimensions } from 'browser/renderer/shared/Types';
 import { BaseRenderLayer } from './BaseRenderLayer';
 import { IBufferService, IDecorationService, IOptionsService } from 'common/services/Services';
 import { ICoreBrowserService, IThemeService } from 'browser/services/Services';
-import { Terminal } from '@daiyam/xterm-tab';
+import { Terminal } from 'xterm';
 
 interface ISelectionState {
   start?: [number, number];

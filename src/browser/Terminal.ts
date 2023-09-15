@@ -54,7 +54,7 @@ import { evaluateKeyboardEvent } from 'common/input/Keyboard';
 import { toRgbString } from 'common/input/XParseColor';
 import { DecorationService } from 'common/services/DecorationService';
 import { IDecorationService } from 'common/services/Services';
-import { IDecoration, IDecorationOptions, IDisposable, ILinkProvider, IMarker } from '@daiyam/xterm-tab';
+import { IDecoration, IDecorationOptions, IDisposable, ILinkProvider, IMarker } from 'xterm';
 import { WindowsOptionsReportType } from '../common/InputHandler';
 import { AccessibilityManager } from './AccessibilityManager';
 

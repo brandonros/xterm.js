@@ -4,7 +4,7 @@
  */
 
 import { ISelectionRenderModel } from 'browser/renderer/shared/Types';
-import { Terminal } from '@daiyam/xterm-tab';
+import { Terminal } from 'xterm';
 
 class SelectionRenderModel implements ISelectionRenderModel {
   public hasSelection!: boolean;

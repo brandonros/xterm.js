@@ -3,9 +3,9 @@
  * @license MIT
  */
 
-import { Terminal, ITerminalAddon } from '@daiyam/xterm-tab';
+import { Terminal, ITerminalAddon } from 'xterm';
 
-declare module '@daiyam/xterm-tab-addon-image' {
+declare module 'xterm-addon-image' {
   export interface IImageAddonOptions {
     /**
      * Enable size reports in windowOptions:

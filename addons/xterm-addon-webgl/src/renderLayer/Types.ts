@@ -3,7 +3,7 @@
  * @license MIT
  */
 
-import { IDisposable, Terminal } from '@daiyam/xterm-tab';
+import { IDisposable, Terminal } from 'xterm';
 import { IRenderDimensions } from 'browser/renderer/shared/Types';
 
 export interface IRenderLayer extends IDisposable {

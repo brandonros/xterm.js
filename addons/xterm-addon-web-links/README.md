@@ -11,7 +11,7 @@ npm install --save xterm-addon-web-links
 ### Usage
 
 ```ts
-import { Terminal } from '@daiyam/xterm-tab';
+import { Terminal } from 'xterm';
 import { WebLinksAddon } from 'xterm-addon-web-links';
 
 const terminal = new Terminal();

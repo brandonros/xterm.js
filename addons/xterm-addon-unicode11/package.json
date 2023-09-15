@@ -1,5 +1,5 @@
 {
-  "name": "@daiyam/xterm-tab-addon-unicode11",
+  "name": "xterm-addon-unicode11",
   "version": "0.6.0-beta.12.0",
   "author": {
     "name": "The xterm.js authors",
@@ -21,6 +21,6 @@
     "prepublishOnly": "npm run package"
   },
   "peerDependencies": {
-    "@daiyam/xterm-tab": "^5.0.0"
+    "xterm": "^5.0.0"
   }
 }

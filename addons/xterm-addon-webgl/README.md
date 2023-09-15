@@ -11,7 +11,7 @@ npm install --save xterm-addon-webgl
 ### Usage
 
 ```ts
-import { Terminal } from '@daiyam/xterm-tab';
+import { Terminal } from 'xterm';
 import { WebglAddon } from 'xterm-addon-webgl';
 
 const terminal = new Terminal();

@@ -3,7 +3,7 @@
  * @license MIT
  */
 
-import { ITerminalAddon, IDisposable, Terminal } from '@daiyam/xterm-tab';
+import { ITerminalAddon, IDisposable, Terminal } from 'xterm';
 
 export interface ILoadedAddon {
   instance: ITerminalAddon;

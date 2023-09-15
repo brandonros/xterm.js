@@ -3,9 +3,9 @@
  * @license MIT
  */
 
-import { Terminal, ITerminalAddon, IEvent } from '@daiyam/xterm-tab';
+import { Terminal, ITerminalAddon, IEvent } from 'xterm';
 
-declare module '@daiyam/xterm-tab-addon-search' {
+declare module 'xterm-addon-search' {
   /**
    * Options for a search.
    */

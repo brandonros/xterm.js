@@ -42,7 +42,7 @@ if ('WebAssembly' in window) {
 
 // Pulling in the module's types relies on the <reference> above, it's looks a
 // little weird here as we're importing "this" module
-import { Terminal as TerminalType, ITerminalOptions } from '@daiyam/xterm-tab';
+import { Terminal as TerminalType, ITerminalOptions } from 'xterm';
 
 export interface IWindowWithTerminal extends Window {
   term: TerminalType;

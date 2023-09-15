@@ -3,7 +3,7 @@
  * @license MIT
  */
 
-import { Terminal } from '@daiyam/xterm-tab';
+import { Terminal } from 'xterm';
 import { enableLigatures } from '.';
 import { ILigatureOptions } from './Types';
 

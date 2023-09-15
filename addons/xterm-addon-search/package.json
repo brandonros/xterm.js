@@ -1,5 +1,5 @@
 {
-  "name": "@daiyam/xterm-tab-addon-search",
+  "name": "xterm-addon-search",
   "version": "0.13.0-beta.20.0",
   "author": {
     "name": "The xterm.js authors",
@@ -21,6 +21,6 @@
     "prepublishOnly": "npm run package"
   },
   "peerDependencies": {
-    "@daiyam/xterm-tab": "^5.0.0"
+    "xterm": "^5.0.0"
   }
 }

@@ -3,7 +3,7 @@
  * @license MIT
  */
 
-import { Terminal, ITerminalAddon } from '@daiyam/xterm-tab';
+import { Terminal, ITerminalAddon } from 'xterm';
 
 declare module 'xterm-addon-attach' {
   export interface IAttachOptions {

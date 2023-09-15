@@ -5,7 +5,7 @@
 
 import { ICharAtlasConfig } from './Types';
 import { Attributes } from 'common/buffer/Constants';
-import { ITerminalOptions } from '@daiyam/xterm-tab';
+import { ITerminalOptions } from 'xterm';
 import { IColorSet, ReadonlyColorSet } from 'browser/Types';
 import { NULL_COLOR } from 'common/Color';
 

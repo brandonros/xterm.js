@@ -10,7 +10,7 @@ import type { IRenderService } from 'browser/services/Services';
 import type { ICoreTerminal, IMarker } from 'common/Types';
 import * as playwright from '@playwright/test';
 import { PageFunction } from 'playwright-core/types/structs';
-import { IBuffer, IBufferCell, IBufferLine, IBufferNamespace, IBufferRange, IDecoration, IDecorationOptions, IModes, ITerminalInitOnlyOptions, ITerminalOptions, Terminal } from '@daiyam/xterm-tab';
+import { IBuffer, IBufferCell, IBufferLine, IBufferNamespace, IBufferRange, IDecoration, IDecorationOptions, IModes, ITerminalInitOnlyOptions, ITerminalOptions, Terminal } from 'xterm';
 import { EventEmitter } from '../../out/common/EventEmitter';
 // TODO: We could avoid needing this
 import deepEqual = require('deep-equal');

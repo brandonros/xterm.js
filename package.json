@@ -1,5 +1,5 @@
 {
-  "name": "@daiyam/xterm-tab",
+  "name": "xterm",
   "description": "Full xterm terminal, in your browser",
   "version": "5.3.0-beta.61.0",
   "main": "lib/xterm.js",

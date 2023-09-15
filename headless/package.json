@@ -1,5 +1,5 @@
 {
- "name": "@daiyam/xterm-tab-headless",
+ "name": "xterm-headless",
  "description": "A headless terminal component that runs in Node.js",
  "version": "5.3.0-beta.61.0",
  "main": "lib-headless/xterm-headless.js",

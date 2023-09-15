@@ -3,7 +3,7 @@
  * @license MIT
  */
 
-import { IBufferRange } from '@daiyam/xterm-tab';
+import { IBufferRange } from 'xterm';
 
 export function getRangeLength(range: IBufferRange, bufferCols: number): number {
   if (range.start.y > range.end.y) {

@@ -1,8 +1,8 @@
-[@daiyam/xterm-tab](https://github.com/daiyam/xterm-tab)
+[xterm](https://github.com/daiyam/xterm-tab)
 ===============================================================================
 
 [![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
-[![NPM Version](https://img.shields.io/npm/v/@daiyam/xterm-tab.svg?colorB=green)](https://www.npmjs.com/package/@daiyam/xterm-tab)
+[![NPM Version](https://img.shields.io/npm/v/xterm.svg?colorB=green)](https://www.npmjs.com/package/xterm)
 
 What is it?
 -----------

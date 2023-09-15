@@ -5,7 +5,7 @@
 
 import { assert } from 'chai';
 import { getRangeLength } from 'common/buffer/BufferRange';
-import { IBufferRange } from '@daiyam/xterm-tab';
+import { IBufferRange } from 'xterm';
 
 describe('BufferRange', () => {
   describe('getRangeLength', () => {
