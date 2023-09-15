@@ -255,18 +255,18 @@ test.describe('InputHandler Integration Tests', () => {
           `);
       await pollFor(ctx.page, () => getLinesAsArray(4), ['##', '##', '##', '######']);
       await pollFor(ctx.page, () => getCursor(), { col: 6, row: 3 });
-      // repeat on fullwidth chars
+      // should not repeat on fullwidth chars
       await ctx.page.evaluate(`
           window.term.reset();
-          window.term.write('￥\x1b[8b');
+          window.term.write('￥\x1b[10b');
           `);
-      await pollFor(ctx.page, () => getLinesAsArray(1), ['￥￥￥￥￥']);
-      // change from xterm: repeat grapheme cluster
+      await pollFor(ctx.page, () => getLinesAsArray(1), ['￥']);
+      // should repeat only base char of combining
       await ctx.page.evaluate(`
           window.term.reset();
-          window.term.write('e\u0301\x1b[2b');
+          window.term.write('e\u0301\x1b[5b');
           `);
-      await pollFor(ctx.page, () => getLinesAsArray(1), ['e\u0301e\u0301e\u0301']);
+      await pollFor(ctx.page, () => getLinesAsArray(1), ['e\u0301eeeee']);
       // should wrap correctly
       await ctx.page.evaluate(`
           window.term.reset();

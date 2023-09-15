@@ -203,14 +203,11 @@ export class RenderService extends Disposable implements IRenderService {
 
   public setRenderer(renderer: IRenderer): void {
     this._renderer.value = renderer;
-    // If the value was not set, the terminal is being disposed so ignore it
-    if (this._renderer.value) {
-      this._renderer.value.onRequestRedraw(e => this.refreshRows(e.start, e.end, true));
+    this._renderer.value.onRequestRedraw(e => this.refreshRows(e.start, e.end, true));
 
-      // Force a refresh
-      this._needsSelectionRefresh = true;
-      this._fullRefresh();
-    }
+    // Force a refresh
+    this._needsSelectionRefresh = true;
+    this._fullRefresh();
   }
 
   public addRefreshCallback(callback: FrameRequestCallback): number {

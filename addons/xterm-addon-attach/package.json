@@ -7,7 +7,7 @@
   },
   "main": "lib/xterm-addon-attach.js",
   "types": "typings/xterm-addon-attach.d.ts",
-  "repository": "https://github.com/xtermjs/xterm.js/tree/master/addons/xterm-addon-attach",
+  "repository": "https://github.com/xtermjs/xterm.js",
   "license": "MIT",
   "keywords": [
     "terminal",
@@ -21,6 +21,6 @@
     "prepublishOnly": "npm run package"
   },
   "peerDependencies": {
-    "xterm": "^5.0.0"
+    "@daiyam/xterm-tab": "^5.0.0"
   }
 }

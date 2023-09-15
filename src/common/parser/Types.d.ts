@@ -146,12 +146,11 @@ export type PrintFallbackHandlerType = PrintHandlerType;
  */
 export interface IEscapeSequenceParser extends IDisposable {
   /**
-   * Preceding grapheme-join-state.
-   * Used for joining grapheme clusters across calls to `print`.
-   * Also used by REP to check if repeating a character is allowed.
-   * It gets reset by the parser for any valid sequence besides text.
+   * Preceding codepoint to get REP working correctly.
+   * This must be set by the print handler as last action.
+   * It gets reset by the parser for any valid sequence beside REP itself.
    */
-  precedingJoinState: number; // More specifically: UnicodeJoinProperties
+  precedingCodepoint: number;
 
   /**
    * Reset the parser to its initial state (handlers are kept).

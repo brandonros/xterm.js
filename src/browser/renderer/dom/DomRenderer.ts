@@ -47,11 +47,9 @@ export class DomRenderer extends Disposable implements IRenderer {
   public readonly onRequestRedraw = this.register(new EventEmitter<IRequestRedrawEvent>()).event;
 
   constructor(
-    private readonly _document: Document,
     private readonly _element: HTMLElement,
     private readonly _screenElement: HTMLElement,
     private readonly _viewportElement: HTMLElement,
-    private readonly _helperContainer: HTMLElement,
     private readonly _linkifier2: ILinkifier2,
     @IInstantiationService instantiationService: IInstantiationService,
     @ICharSizeService private readonly _charSizeService: ICharSizeService,
@@ -61,12 +59,12 @@ export class DomRenderer extends Disposable implements IRenderer {
     @IThemeService private readonly _themeService: IThemeService
   ) {
     super();
-    this._rowContainer = this._document.createElement('div');
+    this._rowContainer = document.createElement('div');
     this._rowContainer.classList.add(ROW_CONTAINER_CLASS);
     this._rowContainer.style.lineHeight = 'normal';
     this._rowContainer.setAttribute('aria-hidden', 'true');
     this._refreshRowElements(this._bufferService.cols, this._bufferService.rows);
-    this._selectionContainer = this._document.createElement('div');
+    this._selectionContainer = document.createElement('div');
     this._selectionContainer.classList.add(SELECTION_CLASS);
     this._selectionContainer.setAttribute('aria-hidden', 'true');
 
@@ -98,7 +96,7 @@ export class DomRenderer extends Disposable implements IRenderer {
       this._dimensionsStyleElement.remove();
     }));
 
-    this._widthCache = new WidthCache(this._document, this._helperContainer);
+    this._widthCache = new WidthCache(document);
     this._widthCache.setFont(
       this._optionsService.rawOptions.fontFamily,
       this._optionsService.rawOptions.fontSize,
@@ -132,7 +130,7 @@ export class DomRenderer extends Disposable implements IRenderer {
     }
 
     if (!this._dimensionsStyleElement) {
-      this._dimensionsStyleElement = this._document.createElement('style');
+      this._dimensionsStyleElement = document.createElement('style');
       this._screenElement.appendChild(this._dimensionsStyleElement);
     }
 
@@ -152,7 +150,7 @@ export class DomRenderer extends Disposable implements IRenderer {
 
   private _injectCss(colors: ReadonlyColorSet): void {
     if (!this._themeStyleElement) {
-      this._themeStyleElement = this._document.createElement('style');
+      this._themeStyleElement = document.createElement('style');
       this._screenElement.appendChild(this._themeStyleElement);
     }
 
@@ -207,8 +205,8 @@ export class DomRenderer extends Disposable implements IRenderer {
       ` animation: blink_block` + `_` + this._terminalClass + ` 1s step-end infinite;` +
       `}` +
       `${this._terminalSelector} .${ROW_CONTAINER_CLASS} .${RowCss.CURSOR_CLASS}.${RowCss.CURSOR_STYLE_BLOCK_CLASS} {` +
-      ` background-color: ${colors.cursor.css} !important;` +
-      ` color: ${colors.cursorAccent.css} !important;` +
+      ` background-color: ${colors.cursor.css};` +
+      ` color: ${colors.cursorAccent.css};` +
       `}` +
       `${this._terminalSelector} .${ROW_CONTAINER_CLASS} .${RowCss.CURSOR_CLASS}.${RowCss.CURSOR_STYLE_OUTLINE_CLASS} {` +
       ` outline: 1px solid ${colors.cursor.css};` +
@@ -278,7 +276,7 @@ export class DomRenderer extends Disposable implements IRenderer {
   private _refreshRowElements(cols: number, rows: number): void {
     // Add missing elements
     for (let i = this._rowElements.length; i <= rows; i++) {
-      const row = this._document.createElement('div');
+      const row = document.createElement('div');
       this._rowContainer.appendChild(row);
       this._rowElements.push(row);
     }
@@ -301,7 +299,6 @@ export class DomRenderer extends Disposable implements IRenderer {
 
   public handleBlur(): void {
     this._rowContainer.classList.remove(FOCUS_CLASS);
-    this.renderRows(0, this._bufferService.rows - 1);
   }
 
   public handleFocus(): void {
@@ -332,7 +329,7 @@ export class DomRenderer extends Disposable implements IRenderer {
     }
 
     // Create the selections
-    const documentFragment = this._document.createDocumentFragment();
+    const documentFragment = document.createDocumentFragment();
 
     if (columnSelectMode) {
       const isXFlipped = start[0] > end[0];
@@ -364,7 +361,7 @@ export class DomRenderer extends Disposable implements IRenderer {
    * @param colEnd The end columns.
    */
   private _createSelectionElement(row: number, colStart: number, colEnd: number, rowCount: number = 1): HTMLElement {
-    const element = this._document.createElement('div');
+    const element = document.createElement('div');
     element.style.height = `${rowCount * this.dimensions.css.cell.height}px`;
     element.style.top = `${row * this.dimensions.css.cell.height}px`;
     element.style.left = `${colStart * this.dimensions.css.cell.width}px`;

@@ -54,7 +54,7 @@ import { evaluateKeyboardEvent } from 'common/input/Keyboard';
 import { toRgbString } from 'common/input/XParseColor';
 import { DecorationService } from 'common/services/DecorationService';
 import { IDecorationService } from 'common/services/Services';
-import { IDecoration, IDecorationOptions, IDisposable, ILinkProvider, IMarker } from 'xterm';
+import { IDecoration, IDecorationOptions, IDisposable, ILinkProvider, IMarker } from '@daiyam/xterm-tab';
 import { WindowsOptionsReportType } from '../common/InputHandler';
 import { AccessibilityManager } from './AccessibilityManager';
 
@@ -561,7 +561,7 @@ export class Terminal extends CoreTerminal implements ITerminal {
   }
 
   private _createRenderer(): IRenderer {
-    return this._instantiationService.createInstance(DomRenderer, this._document!, this.element!, this.screenElement!, this._viewportElement!, this._helperContainer!, this.linkifier2);
+    return this._instantiationService.createInstance(DomRenderer, this.element!, this.screenElement!, this._viewportElement!, this.linkifier2);
   }
 
   /**
@@ -729,8 +729,10 @@ export class Terminal extends CoreTerminal implements ITerminal {
 
       if (!(events & CoreMouseEventType.UP)) {
         this._document!.removeEventListener('mouseup', requestedEvents.mouseup!);
+        el.removeEventListener('mouseup', requestedEvents.mouseup!);
         requestedEvents.mouseup = null;
       } else if (!requestedEvents.mouseup) {
+        el.addEventListener('mouseup', eventListeners.mouseup);
         requestedEvents.mouseup = eventListeners.mouseup;
       }
 

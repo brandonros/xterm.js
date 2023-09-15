@@ -4,7 +4,7 @@ import { ReadonlyColorSet } from 'browser/Types';
 import { Attributes, BgFlags, FgFlags } from 'common/buffer/Constants';
 import { IDecorationService } from 'common/services/Services';
 import { ICellData } from 'common/Types';
-import { Terminal } from 'xterm';
+import { Terminal } from '@daiyam/xterm-tab';
 
 // Work variables to avoid garbage collection
 let $fg = 0;

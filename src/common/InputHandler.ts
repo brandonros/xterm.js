@@ -4,20 +4,19 @@
  * @license MIT
  */
 
-import { IInputHandler, IAttributeData, IDisposable, IWindowOptions, IColorEvent, IParseStack, ColorIndex, ColorRequestType, SpecialColorIndex } from 'common/Types';
+import { IInputHandler, IAttributeData, ICellData, IDisposable, IWindowOptions, IColorEvent, IParseStack, ColorIndex, ColorRequestType, SpecialColorIndex } from 'common/Types';
 import { C0, C1 } from 'common/data/EscapeSequences';
 import { CHARSETS, DEFAULT_CHARSET } from 'common/data/Charsets';
 import { EscapeSequenceParser } from 'common/parser/EscapeSequenceParser';
 import { Disposable } from 'common/Lifecycle';
 import { StringToUtf32, stringFromCodePoint, Utf8ToUtf32 } from 'common/input/TextDecoder';
-import { BufferLine, DEFAULT_ATTR_DATA } from 'common/buffer/BufferLine';
+import { DEFAULT_ATTR_DATA } from 'common/buffer/BufferLine';
 import { EventEmitter } from 'common/EventEmitter';
 import { IParsingState, IEscapeSequenceParser, IParams, IFunctionIdentifier } from 'common/parser/Types';
 import { NULL_CELL_CODE, NULL_CELL_WIDTH, Attributes, FgFlags, BgFlags, Content, UnderlineStyle } from 'common/buffer/Constants';
 import { CellData } from 'common/buffer/CellData';
 import { AttributeData } from 'common/buffer/AttributeData';
 import { ICoreService, IBufferService, IOptionsService, ILogService, ICoreMouseService, ICharsetService, IUnicodeService, LogLevelEnum, IOscLinkService } from 'common/services/Services';
-import { UnicodeService } from 'common/services/UnicodeService';
 import { OscHandler } from 'common/parser/OscParser';
 import { DcsHandler } from 'common/parser/DcsParser';
 import { IBuffer } from 'common/buffer/Types';
@@ -517,9 +516,12 @@ export class InputHandler extends Disposable implements IInputHandler {
       bufferRow.setCellFromCodePoint(this._activeBuffer.x - 1, 0, 1, curAttr.fg, curAttr.bg, curAttr.extended);
     }
 
-    let precedingJoinState = this._parser.precedingJoinState;
     for (let pos = start; pos < end; ++pos) {
       code = data[pos];
+
+      // calculate print space
+      // expensive call, therefore we save width in line buffer
+      chWidth = this._unicodeService.wcwidth(code);
 
       // get charset replacement character
       // charset is only defined for ASCII, therefore we only
@@ -531,12 +533,6 @@ export class InputHandler extends Disposable implements IInputHandler {
         }
       }
 
-      const currentInfo = this._unicodeService.charProperties(code, precedingJoinState);
-      chWidth = UnicodeService.extractWidth(currentInfo);
-      const shouldJoin = UnicodeService.extractShouldJoin(currentInfo);
-      const oldWidth = shouldJoin ? UnicodeService.extractWidth(precedingJoinState) : 0;
-      precedingJoinState = currentInfo;
-
       if (screenReaderMode) {
         this._onA11yChar.fire(stringFromCodePoint(code));
       }
@@ -544,16 +540,34 @@ export class InputHandler extends Disposable implements IInputHandler {
         this._oscLinkService.addLineToLink(this._getCurrentLinkId(), this._activeBuffer.ybase + this._activeBuffer.y);
       }
 
+      // insert combining char at last cursor position
+      // this._activeBuffer.x should never be 0 for a combining char
+      // since they always follow a cell consuming char
+      // therefore we can test for this._activeBuffer.x to avoid overflow left
+      if (!chWidth && this._activeBuffer.x) {
+        if (!bufferRow.getWidth(this._activeBuffer.x - 1)) {
+          // found empty cell after fullwidth, need to go 2 cells back
+          // it is save to step 2 cells back here
+          // since an empty cell is only set by fullwidth chars
+          bufferRow.addCodepointToCell(this._activeBuffer.x - 2, code);
+        } else {
+          bufferRow.addCodepointToCell(this._activeBuffer.x - 1, code);
+        }
+        continue;
+      }
+
       // goto next line if ch would overflow
       // NOTE: To avoid costly width checks here,
       // the terminal does not allow a cols < 2.
-      if (this._activeBuffer.x + chWidth - oldWidth > cols) {
+      if (this._activeBuffer.x + chWidth - 1 >= cols) {
         // autowrap - DECAWM
         // automatically wraps to the beginning of the next line
         if (wraparoundMode) {
-          const oldRow = bufferRow;
-          let oldCol = this._activeBuffer.x - oldWidth;
-          this._activeBuffer.x = oldWidth;
+          // clear left over cells to the right
+          while (this._activeBuffer.x < cols) {
+            bufferRow.setCellFromCodePoint(this._activeBuffer.x++, 0, 1, curAttr.fg, curAttr.bg, curAttr.extended);
+          }
+          this._activeBuffer.x = 0;
           this._activeBuffer.y++;
           if (this._activeBuffer.y === this._activeBuffer.scrollBottom + 1) {
             this._activeBuffer.y--;
@@ -568,16 +582,6 @@ export class InputHandler extends Disposable implements IInputHandler {
           }
           // row changed, get it again
           bufferRow = this._activeBuffer.lines.get(this._activeBuffer.ybase + this._activeBuffer.y)!;
-          if (oldWidth > 0 && bufferRow instanceof BufferLine) {
-            // Combining character widens 1 column to 2.
-            // Move old character to next line.
-            bufferRow.copyCellsFrom(oldRow as BufferLine,
-              oldCol, 0, oldWidth, false);
-          }
-          // clear left over cells to the right
-          while (oldCol < cols) {
-            oldRow.setCellFromCodePoint(oldCol++, 0, 1, curAttr.fg, curAttr.bg, curAttr.extended);
-          }
         } else {
           this._activeBuffer.x = cols - 1;
           if (chWidth === 2) {
@@ -588,27 +592,10 @@ export class InputHandler extends Disposable implements IInputHandler {
         }
       }
 
-      // insert combining char at last cursor position
-      // this._activeBuffer.x should never be 0 for a combining char
-      // since they always follow a cell consuming char
-      // therefore we can test for this._activeBuffer.x to avoid overflow left
-      if (shouldJoin && this._activeBuffer.x) {
-        const offset = bufferRow.getWidth(this._activeBuffer.x - 1) ? 1 : 2;
-        // if empty cell after fullwidth, need to go 2 cells back
-        // it is save to step 2 cells back here
-        // since an empty cell is only set by fullwidth chars
-        bufferRow.addCodepointToCell(this._activeBuffer.x - offset,
-          code, chWidth);
-        for (let delta = chWidth - oldWidth; --delta >= 0; ) {
-          bufferRow.setCellFromCodePoint(this._activeBuffer.x++, 0, 0, curAttr.fg, curAttr.bg, curAttr.extended);
-        }
-        continue;
-      }
-
       // insert mode: move characters to right
       if (insertMode) {
         // right shift cells according to the width
-        bufferRow.insertCells(this._activeBuffer.x, chWidth - oldWidth, this._activeBuffer.getNullCell(curAttr), curAttr);
+        bufferRow.insertCells(this._activeBuffer.x, chWidth, this._activeBuffer.getNullCell(curAttr), curAttr);
         // test last cell - since the last cell has only room for
         // a halfwidth char any fullwidth shifted there is lost
         // and will be set to empty cell
@@ -630,8 +617,20 @@ export class InputHandler extends Disposable implements IInputHandler {
         }
       }
     }
-
-    this._parser.precedingJoinState = precedingJoinState;
+    // store last char in Parser.precedingCodepoint for REP to work correctly
+    // This needs to check whether:
+    //  - fullwidth + surrogates: reset
+    //  - combining: only base char gets carried on (bug in xterm?)
+    if (end - start > 0) {
+      bufferRow.loadCell(this._activeBuffer.x - 1, this._workCell);
+      if (this._workCell.getWidth() === 2 || this._workCell.getCode() > 0xFFFF) {
+        this._parser.precedingCodepoint = 0;
+      } else if (this._workCell.isCombined()) {
+        this._parser.precedingCodepoint = this._workCell.getChars().charCodeAt(0);
+      } else {
+        this._parser.precedingCodepoint = this._workCell.content;
+      }
+    }
 
     // handle wide chars: reset cell to the right if it is second cell of a wide char
     if (this._activeBuffer.x < cols && end - start > 0 && bufferRow.getWidth(this._activeBuffer.x) === 0 && !bufferRow.hasContent(this._activeBuffer.x)) {
@@ -813,11 +812,33 @@ export class InputHandler extends Disposable implements IInputHandler {
     if (this._activeBuffer.x >= this._bufferService.cols) {
       return true;
     }
+
     const originalX = this._activeBuffer.x;
-    this._activeBuffer.x = this._activeBuffer.nextStop();
-    if (this._optionsService.rawOptions.screenReaderMode) {
+    const buffer = this._activeBuffer;
+    const bufferRow = buffer.lines.get(buffer.y + buffer.ybase);
+
+    buffer.x = buffer.nextStop();
+
+    if (bufferRow) {
+      const length = buffer.x - originalX;
+      const curAttr = this._curAttrData;
+
+      bufferRow.setCellFromCodePoint(originalX, Content.TAB_CODE, 1, curAttr.fg, curAttr.bg, curAttr.extended);
+
+      for (let i = 1; i < length; i++) {
+        bufferRow.setCell(originalX + i, {
+          content: Content.TAB_FILLER,
+          fg: curAttr.fg,
+          bg: curAttr.bg,
+          extended: curAttr.extended
+        } as Partial<ICellData> as ICellData);
+      }
+    }
+
+    if (this._optionsService.options.screenReaderMode) {
       this._onA11yTab.fire(this._activeBuffer.x - originalX);
     }
+
     return true;
   }
 
@@ -1577,8 +1598,9 @@ export class InputHandler extends Disposable implements IInputHandler {
    *    If the character preceding REP is a control function or part of a control function,
    *    the effect of REP is not defined by this Standard.
    *
-   * We extend xterm's behavior to allow repeating entire grapheme clusters.
-   * This isn't 100% xterm-compatible, but it seems saner and more useful.
+   * Since we propagate the terminal as xterm-256color we have to follow xterm's behavior:
+   *    - fullwidth + surrogate chars are ignored
+   *    - for combining chars only the base char gets repeated
    *    - text attrs are applied normally
    *    - wrap around is respected
    *    - any valid sequence resets the carried forward char
@@ -1592,29 +1614,16 @@ export class InputHandler extends Disposable implements IInputHandler {
    * (NOOP for any other sequence in between or NON ASCII characters).
    */
   public repeatPrecedingCharacter(params: IParams): boolean {
-    const joinState = this._parser.precedingJoinState;
-    if (!joinState) {
+    if (!this._parser.precedingCodepoint) {
       return true;
     }
     // call print to insert the chars and handle correct wrapping
     const length = params.params[0] || 1;
-    const chWidth = UnicodeService.extractWidth(joinState);
-    const x = this._activeBuffer.x - chWidth;
-    const bufferRow = this._activeBuffer.lines.get(this._activeBuffer.ybase + this._activeBuffer.y)!;
-    const text = bufferRow.getString(x);
-    const data = new Uint32Array(text.length * length);
-    let idata = 0;
-    for (let itext = 0; itext < text.length; ) {
-      const ch = text.codePointAt(itext) || 0;
-      data[idata++] = ch;
-      itext += ch > 0xffff ? 2 : 1;
+    const data = new Uint32Array(length);
+    for (let i = 0; i < length; ++i) {
+      data[i] = this._parser.precedingCodepoint;
     }
-    let tlength = idata;
-    for (let i = 1; i < length; ++i) {
-      data.copyWithin(tlength, 0, idata);
-      tlength += idata;
-    }
-    this.print(data, 0, tlength);
+    this.print(data, 0, data.length);
     return true;
   }
 

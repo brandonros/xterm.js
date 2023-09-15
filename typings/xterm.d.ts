@@ -9,7 +9,7 @@
 
 /// <reference lib="dom"/>
 
-declare module 'xterm' {
+declare module '@daiyam/xterm-tab' {
   /**
    * A string or number representing text font weight.
    */
@@ -1773,7 +1773,6 @@ declare module 'xterm' {
      * Unicode version dependent wcwidth implementation.
      */
     wcwidth(codepoint: number): 0 | 1 | 2;
-    charProperties(codepoint: number, preceding: number): number;
   }
 
   /**

@@ -16,7 +16,7 @@ npm install --save xterm-addon-ligatures
 ### Usage
 
 ```ts
-import { Terminal } from 'xterm';
+import { Terminal } from '@daiyam/xterm-tab';
 import { LigaturesAddon } from 'xterm-addon-ligatures';
 
 const terminal = new Terminal();

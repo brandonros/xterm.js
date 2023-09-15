@@ -180,11 +180,7 @@ export class DomRendererRowFactory {
           && !isDecorated
         ) {
           // no span alterations, thus only account chars skipping all code below
-          if (cell.isInvisible()) {
-            text += WHITESPACE_CELL_CHAR;
-          } else {
-            text += chars;
-          }
+          text += chars;
           cellAmount++;
           continue;
         } else {
@@ -218,7 +214,7 @@ export class DomRendererRowFactory {
         }
       }
 
-      if (!this._coreService.isCursorHidden && isCursorCell && this._coreService.isCursorInitialized) {
+      if (!this._coreService.isCursorHidden && isCursorCell) {
         classes.push(RowCss.CURSOR_CLASS);
         if (this._coreBrowserService.isFocused) {
           if (cursorBlink) {
@@ -419,7 +415,7 @@ export class DomRendererRowFactory {
           break;
         case Attributes.CM_DEFAULT:
         default:
-          if (!this._applyMinimumContrast(charElement, resolvedBg, colors.foreground, cell, bgOverride, fgOverride)) {
+          if (!this._applyMinimumContrast(charElement, resolvedBg, colors.foreground, cell, bgOverride, undefined)) {
             if (isInverse) {
               classes.push(`xterm-fg-${INVERTED_DEFAULT_COLOR}`);
             }

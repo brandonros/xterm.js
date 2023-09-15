@@ -3,9 +3,9 @@
  * @license MIT
  */
 
-import { Terminal, ITerminalAddon } from 'xterm';
+import { Terminal, ITerminalAddon } from '@daiyam/xterm-tab';
 
-declare module 'xterm-addon-serialize' {
+declare module '@daiyam/xterm-tab-addon-serialize' {
   /**
    * An xterm.js addon that enables serialization of terminal contents.
    */

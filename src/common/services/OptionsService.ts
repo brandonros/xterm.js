@@ -47,7 +47,7 @@ export const DEFAULT_OPTIONS: Readonly<Required<ITerminalOptions>> = {
   windowOptions: {},
   windowsMode: false,
   windowsPty: {},
-  wordSeparator: ' ()[]{}\',"`',
+  wordSeparator: ' \t()[]{}\',"`',
   altClickMovesCursor: true,
   convertEol: false,
   termName: 'xterm',

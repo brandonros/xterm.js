@@ -1,13 +1,13 @@
 {
-  "name": "xterm-addon-image",
-  "version": "0.6.0",
+  "name": "@daiyam/xterm-tab-addon-image",
+  "version": "0.6.0-beta.14.1",
   "author": {
     "name": "The xterm.js authors",
     "url": "https://xtermjs.org/"
   },
   "main": "lib/xterm-addon-image.js",
   "types": "typings/xterm-addon-image.d.ts",
-  "repository": "https://github.com/xtermjs/xterm.js/tree/master/addons/xterm-addon-image",
+  "repository": "https://github.com/xtermjs/xterm.js",
   "license": "MIT",
   "keywords": [
     "terminal",
@@ -22,7 +22,7 @@
     "prepublishOnly": "npm run package"
   },
   "peerDependencies": {
-    "xterm": "^5.2.0"
+    "@daiyam/xterm-tab": "^5.2.0"
   },
   "devDependencies": {
     "sixel": "^0.16.0",

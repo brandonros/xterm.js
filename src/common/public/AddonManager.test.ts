@@ -5,7 +5,7 @@
 
 import { assert } from 'chai';
 import { AddonManager, ILoadedAddon } from './AddonManager';
-import { ITerminalAddon } from 'xterm';
+import { ITerminalAddon } from '@daiyam/xterm-tab';
 
 class TestAddonManager extends AddonManager {
   public get addons(): ILoadedAddon[] {

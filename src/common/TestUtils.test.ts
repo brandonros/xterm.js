@@ -3,8 +3,7 @@
  * @license MIT
  */
 
-import { IBufferService, ICoreService, ILogService, IOptionsService, ITerminalOptions, ICoreMouseService, ICharsetService, UnicodeCharProperties, UnicodeCharWidth, IUnicodeService, IUnicodeVersionProvider, LogLevelEnum, IDecorationService, IInternalDecoration, IOscLinkService } from 'common/services/Services';
-import { UnicodeService } from 'common/services/UnicodeService';
+import { IBufferService, ICoreService, ILogService, IOptionsService, ITerminalOptions, ICoreMouseService, ICharsetService, IUnicodeService, IUnicodeVersionProvider, LogLevelEnum, IDecorationService, IInternalDecoration, IOscLinkService } from 'common/services/Services';
 import { IEvent, EventEmitter } from 'common/EventEmitter';
 import { clone } from 'common/Clone';
 import { DEFAULT_OPTIONS } from 'common/services/OptionsService';
@@ -12,7 +11,7 @@ import { IBufferSet, IBuffer } from 'common/buffer/Types';
 import { BufferSet } from 'common/buffer/BufferSet';
 import { IDecPrivateModes, ICoreMouseEvent, CoreMouseEventType, ICharset, IModes, IAttributeData, IOscLinkData, IDisposable } from 'common/Types';
 import { UnicodeV6 } from 'common/input/UnicodeV6';
-import { IDecorationOptions, IDecoration } from 'xterm';
+import { IDecorationOptions, IDecoration } from '@daiyam/xterm-tab';
 
 export class MockBufferService implements IBufferService {
   public serviceBrand: any;
@@ -78,7 +77,7 @@ export class MockCharsetService implements ICharsetService {
 
 export class MockCoreService implements ICoreService {
   public serviceBrand: any;
-  public isCursorInitialized: boolean = true;
+  public isCursorInitialized: boolean = false;
   public isCursorHidden: boolean = false;
   public isFocused: boolean = false;
   public modes: IModes = {
@@ -169,20 +168,7 @@ export class MockUnicodeService implements IUnicodeService {
   public versions: string[] = [];
   public activeVersion: string = '';
   public onChange: IEvent<string> = new EventEmitter<string>().event;
-  public wcwidth = (codepoint: number): UnicodeCharWidth => this._provider.wcwidth(codepoint);
-  public charProperties(codepoint: number, preceding: UnicodeCharProperties): UnicodeCharProperties {
-    let width = this.wcwidth(codepoint);
-    let shouldJoin = width === 0 && preceding !== 0;
-    if (shouldJoin) {
-      const oldWidth = UnicodeService.extractWidth(preceding);
-      if (oldWidth === 0) {
-        shouldJoin = false;
-      } else if (oldWidth > width) {
-        width = oldWidth;
-      }
-    }
-    return UnicodeService.createPropertyValue(0, width, shouldJoin);
-  }
+  public wcwidth = (codepoint: number): number => this._provider.wcwidth(codepoint);
   public getStringCellWidth(s: string): number {
     throw new Error('Method not implemented.');
   }

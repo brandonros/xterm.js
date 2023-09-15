@@ -4,7 +4,7 @@
  */
 
 
-import { Terminal, ITerminalAddon, IViewportRange } from 'xterm';
+import { Terminal, ITerminalAddon, IViewportRange } from '@daiyam/xterm-tab';
 
 declare module 'xterm-addon-web-links' {
   /**

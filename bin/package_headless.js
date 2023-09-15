@@ -14,7 +14,7 @@ console.log('> headless/package.json');
 const xtermPackageJson = require('../package.json');
 const xtermHeadlessPackageJson = {
   ...xtermPackageJson,
-  name: 'xterm-headless',
+  name: '@daiyam/xterm-tab-headless',
   description: 'A headless terminal component that runs in Node.js',
   main: 'lib-headless/xterm-headless.js',
   types: 'typings/xterm-headless.d.ts',
@@ -30,12 +30,6 @@ mkdirF(join(headlessRoot, 'typings'));
 fs.copyFileSync(
   join(repoRoot, 'typings/xterm-headless.d.ts'),
   join(headlessRoot, 'typings/xterm-headless.d.ts')
-);
-
-console.log('> headless/logo-full.png');
-fs.copyFileSync(
-  join(repoRoot, 'logo-full.png'),
-  join(headlessRoot, 'logo-full.png')
 );
 
 function mkdirF(p) {

@@ -3,9 +3,9 @@
  * @license MIT
  */
 
-import { Terminal, ITerminalAddon, IEvent } from 'xterm';
+import { Terminal, ITerminalAddon, IEvent } from '@daiyam/xterm-tab';
 
-declare module 'xterm-addon-canvas' {
+declare module '@daiyam/xterm-tab-addon-canvas' {
   /**
    * An xterm.js addon that provides search functionality.
    */

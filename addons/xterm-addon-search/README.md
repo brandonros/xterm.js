@@ -11,7 +11,7 @@ npm install --save xterm-addon-search
 ### Usage
 
 ```ts
-import { Terminal } from 'xterm';
+import { Terminal } from '@daiyam/xterm-tab';
 import { SearchAddon } from 'xterm-addon-search';
 
 const terminal = new Terminal();
