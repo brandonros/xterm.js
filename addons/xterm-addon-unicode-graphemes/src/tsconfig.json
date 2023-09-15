@@ -4,21 +4,22 @@
     "target": "es2021",
     "lib": [
       "dom",
-      "es2021",
+      "es2021"
     ],
     "rootDir": ".",
     "outDir": "../out",
     "sourceMap": true,
     "removeComments": true,
     "strict": true,
-    "types": [
-      "../../../node_modules/@types/mocha"
-    ],
+    "baseUrl": ".",
     "paths": {
       "common/*": [
         "../../../src/common/*"
       ]
-    }
+    },
+    "types": [
+      "../../../node_modules/@types/mocha"
+    ]
   },
   "include": [
     "./**/*",

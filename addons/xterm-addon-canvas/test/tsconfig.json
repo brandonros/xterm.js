@@ -1,13 +1,12 @@
 {
   "compilerOptions": {
     "module": "commonjs",
-    "target": "es2021",
+    "target": "es2015",
     "lib": [
-      "dom",
-      "es2021"
+      "es6",
     ],
     "rootDir": ".",
-    "outDir": "../out",
+    "outDir": "../out-test",
     "sourceMap": true,
     "removeComments": true,
     "baseUrl": ".",
@@ -20,10 +19,11 @@
       ]
     },
     "strict": true,
-    "downlevelIteration": true,
-    "experimentalDecorators": true,
     "types": [
-      "../../../node_modules/@types/mocha"
+      "../../../node_modules/@types/node",
+      "../../../node_modules/@lunapaint/png-codec",
+      "../../../out-test/playwright/TestUtils",
+      "../../../out-test/playwright/SharedRendererTests"
     ]
   },
   "include": [

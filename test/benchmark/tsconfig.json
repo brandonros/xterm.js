@@ -2,7 +2,7 @@
   "compilerOptions": {
     "lib": [
       "dom",
-      "es6",
+      "es2021",
     ],
     "outDir": "../../out-test/benchmark",
     "types": [

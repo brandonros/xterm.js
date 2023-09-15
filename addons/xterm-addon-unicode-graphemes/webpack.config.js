@@ -1,14 +1,14 @@
 /**
- * Copyright (c) 2020 The xterm.js authors. All rights reserved.
+ * Copyright (c) 2019 The xterm.js authors. All rights reserved.
  * @license MIT
  */
 
 const path = require('path');
 
-const addonName = 'ImageAddon';
-const mainFile = 'xterm-addon-image.js';
+const addonName = 'UnicodeGraphemesAddon';
+const mainFile = 'xterm-addon-unicode-graphemes.js';
 
-const addon = {
+module.exports = {
   entry: `./out/${addonName}.js`,
   devtool: 'source-map',
   module: {
@@ -21,6 +21,13 @@ const addon = {
       }
     ]
   },
+  resolve: {
+    modules: ['./node_modules'],
+    extensions: [ '.js' ],
+    alias: {
+      common: path.resolve('../../out/common')
+    }
+  },
   output: {
     filename: mainFile,
     path: path.resolve('./lib'),
@@ -29,5 +36,3 @@ const addon = {
   },
   mode: 'production'
 };
-
-module.exports = [addon];
